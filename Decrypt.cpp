@@ -16,26 +16,27 @@ int main()
 
         for (key = 0; key < 26; key++)
         {
-                for (count = 0; count < length; count++)
-                {
-                        if (isalpha(cipher[count]))
-                        {
-                                cipher[count] = tolower(cipher[count]);
-                                plaintext = cipher[count];
+		for (count = 0; count < length; count++)	
+		{
+			for (int j = 0; j <= key; j++)
+                	{
+                        	if (isalpha(cipher[count]))
+                        	{
+                                	cipher[count] = tolower(cipher[count]);
+                                	plaintext = cipher[count];
 
-                                if (plaintext >= 'a' && plaintext <= 'z')
-                                {
-                                        plaintext = plaintext - key;
-
-                                        if (plaintext < 'a')
+                                	if (plaintext == 'a')
+                                	{
+                                        	plaintext = 'z';
+					}
+					else
                                         {
-                                                plaintext = plaintext + 'z' - 'a' +1;
+                                                plaintext--;
                                         }
-                                }
+                                }	
                         }
-                        cipher[count] = plaintext;
-                }
-                cout << "Decryption with key =" << key << "is: " << cipher << endl;
-                
-        }
+                	cipher[count] = plaintext;
+		}
+                cout << "Decryption with key = " << key + 1 << " is: " << cipher << endl;
+	}
 }
