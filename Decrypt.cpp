@@ -5,38 +5,36 @@ using namespace std;
 
 int main()
 {
-        string cipher;
-        char plaintext;
+        string cipher, plaintext;
         int key, length, count;
 
         cout << "Cipher text: " << endl;
         getline(cin, cipher);
 
-        length = (int)cipher.length();
-
         for (key = 0; key < 26; key++)
         {
-		for (count = 0; count < length; count++)	
-		{
-			for (int j = 0; j <= key; j++)
-                	{
-                        	if (isalpha(cipher[count]))
-                        	{
-                                	cipher[count] = tolower(cipher[count]);
-                                	plaintext = cipher[count];
+                plaintext = cipher;
+                length = (int)plaintext.length();
 
-                                	if (plaintext == 'a')
-                                	{
-                                        	plaintext = 'z';
-					}
-					else
+                for (count = 0; count < length; count++)
+                {
+                        if (isalpha(plaintext[count]))
+                        {
+                                plaintext[count] = tolower(plaintext[count]);
+
+                                for (int j = 0; j < key; j++)
+                                {
+                                        if (plaintext[count] == 'a')
                                         {
-                                                plaintext--;
+                                                plaintext[count] = 'z';
                                         }
-                                }	
+                                        else
+                                        {
+                                                plaintext[count]--;
+                                        }
+                                }
                         }
-                	cipher[count] = plaintext;
-		}
-                cout << "Decryption with key = " << key + 1 << " is: " << cipher << endl;
-	}
+                }
+        cout << "Decryption with key = " << key << " is: " << plaintext << endl;
+        }
 }
