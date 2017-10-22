@@ -1,0 +1,165 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+
+using namespace std;
+
+class Vigenere
+{
+	public:
+		string key;
+
+		Vigenere(string key)
+		{
+			for (int i = 0; i < key.size(); ++i)
+			{
+				if ( key[i] >= 'A' && key[i] <= 'Z')
+				{
+					this->key += key[i];
+				}
+				else if (key[i] >= 'a' && key[i] <= 'z' )
+				{
+					this->key += key[i] + 'A' - 'a';
+				}
+			}
+		}
+
+		string encipher(string text)
+		{
+			string ciphertext;
+
+			for ( int i = 0,  j = 0; i < text.length(); ++i )
+			{
+				char c = text[i];
+				if(c >= 'a' && c <= 'z')
+				{
+					c += 'A' - 'a';
+				}
+				else if( c < 'A' || c > 'Z' )
+				{
+					if (c == '.')
+					{
+						ciphertext += '&';
+					}
+					else if (c == ',')
+					{
+						ciphertext += '%';
+					}
+					else if (c == ' ')
+					{
+					ciphertext += '#';
+					}
+					continue;
+				}
+				ciphertext += (c + key[j] - 2*'A') % 26 + 'A';
+				j = (j + 1) % key.length();
+			}
+			
+			return ciphertext;
+		}
+
+		string decipher(string text)
+		{
+			string plaintext;
+			string space = " ";
+
+			for( int i = 0, j = 0; i < text.length(); ++i ) 
+			{
+				char c = text[i];
+
+				if(c >= 'a' && c <= 'z')
+				{
+					c += 'A' - 'a';
+				}
+				else if(c < 'A' || c > 'Z')
+				{
+					if (c == '&')
+					{
+						plaintext += ". ";
+					}
+					if (c == '%')
+					{
+						plaintext += ", ";
+					}
+					if (c == '#')
+					{
+						plaintext += space;
+					}
+					continue;
+				}
+
+				plaintext += (c - key[j] + 26) % 26 + 'A';
+				j = (j + 1) % key.length();
+			}
+
+			return plaintext;
+		}
+};
+
+
+int main( int argc, char * argv[])
+{
+	ifstream inputStream;
+	ofstream outputStream;
+
+	string original = argv[2];
+	string result = argv[3];
+
+	string key;
+
+	ifstream in(original);
+	string contents((std::istreambuf_iterator<char>(in)), 
+	istreambuf_iterator<char>());
+
+	cout << "Please enter a keyword: ";
+	cin >> key;
+
+	Vigenere cipher(key);
+
+	if ( argv[1][1] == 'e' ) 
+	{
+		string enciphered = cipher.encipher(contents); // Encrypting.
+		outputStream.open (result); // Opening specified output file (or creating it.)
+		outputStream << enciphered; // Writing results in this file.
+		outputStream.close(); // Closing this file.
+	}
+	else if ( argv[1][1] == 'd' ) 
+	{
+		string deciphered = cipher.decipher(contents); // Decrypting.
+		outputStream.open (result); // Opening specified output file (or creating it.)
+		outputStream << deciphered; // Writing results in this file.
+		outputStream.close(); // Closing this file.
+	}
+	else 
+	{				
+		// In the event that the user makes a typing error...
+		cout << "Invalid parameters. Please try again." << endl;
+		pressEnterToContinue();
+	}
+
+	if ( argv[1][1] == 'e' )
+	{
+		cout << "The text file has been encrypted.";
+	}
+	else
+	{
+		cout << "The text file has been decrypted.";
+	}
+
+	// Allowing the user to continue at his or her own discretion.
+	pressEnterToContinue();
+			
+	return 0;
+}
+
+
+https://gist.github.com/sejr/10757679
+
+
+
+
+
+
+
+
+
